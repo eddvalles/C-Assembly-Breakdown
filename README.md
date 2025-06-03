@@ -9,4 +9,5 @@ This repository showcases hands-on C development and low-level analysis of Windo
 - **C (ISO/ANSI standard)** – Low-level systems programming
 - **IDA Free** – Interactive disassembly and control flow analysis
 - **PEStudio** – Static PE file analysis and behavioral indicators
+- **FLARE VM** – Malware analysis environment with built-in RE tools
 - **PowerShell / Git Bash** – Build, run, and disassemble from the command line
