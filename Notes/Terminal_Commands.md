@@ -1,1 +1,1 @@
-gcc hello_world.c -o hello.exe && .\hello.exe
+gcc hello_world.c -o hello.exe
