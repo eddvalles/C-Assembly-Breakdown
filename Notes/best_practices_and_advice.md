@@ -11,3 +11,5 @@ Performance Tip:
 3. In expressions using operator (||), make the condition that's most likely to be TRUE the left-most condition.
     (due to Short Circuit Evaluation)
 
+    CONTINUE ON PAGE 195
+
