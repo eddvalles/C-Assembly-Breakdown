@@ -1,0 +1,9 @@
+Arrays:
+    static
+    const   - Used to prevent modification of array values in a function
+
+Variable Length Arrays:
+    Arrays whose lengths are defined in terms of expressions evaluated at execution time.
+    Used in cases in which an array's size is not known at compilation time.
+
+    
