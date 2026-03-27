@@ -9,6 +9,14 @@ void print2DArray(size_t row, size_t col, int array[row][col]);
 int main(void)
 {
     printf("%s", "Enter size of a one-dimensional array: ");
+    int arraySize; // size of 1D array
+    scanf("%d", &arraySize);
+
+    int array[arraySize]; // declare 1-D variable-length array
+
+    printf("%s", "Enter number of rows and columns in a 2-D array: ");
+    int row1, col1; // number of rows and columns in a 2-D array
+    scanf("%d %d", &row1, &col1);
 }
 
 void print1DArray(size_t size, int array[size])
