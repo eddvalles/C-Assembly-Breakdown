@@ -13,6 +13,8 @@ int main(void)
     printf("The string before conversion is: %s", string);
     convertToUppercase(string);
     printf("\nThe string after conversion is: %s\n", string);
+
+    return 0;
 }
 
 // convert string to uppercase letters
