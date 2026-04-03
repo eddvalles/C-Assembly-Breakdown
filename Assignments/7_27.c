@@ -23,7 +23,7 @@ The first two digits of each SML instruction are the operation code, which speci
 The last two digits of an SML instruction are the operand, which is the address of the memory location containing
 the word to which the operation applies. 
 
-The following SML program reads two numbers from the keyboard, and computes and prints their sum.
+Ex. 1) The following SML program reads two numbers from the keyboard, and computes and prints their sum.
 00 +1007 (Read A)
 01 +1008 (Read B)
 02 +2007 (Load A)
@@ -35,13 +35,17 @@ The following SML program reads two numbers from the keyboard, and computes and 
 08 +0000 (Variable B)
 09 +0000 (Result C)
 
-Pseudocode:
---- LOAD PHASE ---
-prompt user to enter instructions one by one
-for each input:
-    store it in memory[instructionCounter]
-    increment instructionCounter
-until user signals end of program
+Ex. 2) 
+
+
+a) Use a sentinel-controlled loop to read positive integers and compute and print their sum
+
+b) Use a counter-controlled loop to read seven numbers, some positive and some negative, and
+compute and print their average
+
+c) Read a series of numbers and determine and print the largest number. The first number read indicates
+how many numbers should be processed
+
 */
 
 #include <stdio.h>
@@ -67,6 +71,7 @@ int main(void)
 {
     // Define the 100-word memory
     int MEMORY[MEM_SIZE] = {0};
+    int instructionCounter = 0; // Number of instructions that were provided by the user
 
     puts("Initial Memory Array: ");
     showMemory(MEMORY);
@@ -74,35 +79,104 @@ int main(void)
     // Prompt user to enter instructions one by one
     printf("Please enter instructions:\n");
     for (int i = 0; i < MEM_SIZE; i++){
-        int instruction = 0;
+        int input = 0;
 
-        scanf("%4d", &instruction);
+        scanf("%d", &input);
 
-        if (instruction == 4300){
-            printf("Halting program...\n\n");
+        if (input == -9999){
+            printf("Compiling...\n\n");
             break;
         }
+        
+        MEMORY[i] = input;
 
-        MEMORY[i] = instruction;
+        instructionCounter++;
     }
 
     puts("Final Memory Array: ");
     showMemory(MEMORY);
 
-    // TODO: Build a switch-case that will take the first two digits of the provided number
-    // TODO: and perform that instruction (% or /)?
-    //switch (instruction){
-    //    case 10: // Read a word from the terminal into a specific location in memory
-            // TODO: Determine action to take here
-    //}
+    int accumulator = 0;
+
+    int running = 1;
+    int index = 0;
+    while (running){
+        int instruction = MEMORY[index];
+
+        int opcode = instruction / 100;
+        int operand = instruction % 100;
+
+        switch(opcode){
+            case READ:
+                printf("Please provide an integer > ");
+
+                int input = 0;
+                scanf("%d", &input);
+
+                MEMORY[operand] = input;
+
+                index++;
+                break;
+            case WRITE:
+                printf("\nValue: %d\n", MEMORY[operand]);
+
+                index++;
+                break;
+            case LOAD:
+                accumulator = MEMORY[operand];
+
+                index++;
+                break;
+            case STORE:
+                MEMORY[operand] = accumulator;
+
+                index++;
+                break;
+            case ADD:
+                accumulator += MEMORY[operand];
+
+                index++;
+                break;
+            case SUBTRACT:
+                accumulator -= MEMORY[operand];
+
+                index++;
+                break;
+            case BRANCHNEG:
+                if (accumulator < 0){
+                    index = operand;
+                }
+                else {
+                    index++;
+                }
+
+                break;
+            case HALT:
+                running = 0;
+                break;
+        }   
+    }
+
+
+    printf("Accumulator: %d\n", accumulator);
+    showMemory(MEMORY);
 
     return 0;
 }
 
 void showMemory(int memArray[])
 {
+    printf("[");
+
     for (int i = 0; i < MEM_SIZE; i++){
-        printf("%d, ", memArray[i]);
+        if (i == MEM_SIZE - 1){
+            printf("%d", memArray[i]);
+        }
+        else {
+            printf("%d, ", memArray[i]);
+        }
+        
     }
-    puts("");
+
+    printf("]\n");
 }
