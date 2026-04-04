@@ -35,10 +35,36 @@ Ex. 1) The following SML program reads two numbers from the keyboard, and comput
 08 +0000 (Variable B)
 09 +0000 (Result C)
 
-Ex. 2) 
-
+Ex. 2) The following SML program reads two numbers from the keyboard, and determines and prints the larger value.
+00 +1009 (Read A)
+01 +1010 (Read B)
+02 +2009 (Load A)
+03 +3110 (Subtract B)
+04 +4107 (Branch negative to 07)
+05 +1109 (Write A)
+06 +4300 (Halt)
+07 +1110 (Write B)
+08 +4300 (Halt)
+09 +0000 (Variable A)
+10 +0000 (Variable B)
 
 a) Use a sentinel-controlled loop to read positive integers and compute and print their sum
+00 +1011 READ input
+01 +2011 LOAD input into accumulator
+02 +3112 Subtract accumulator from sentinel
+03 +4208 BRANCHZERO 08, if result is 0, input was -1, jump to end
+04 +2013 LOAD sum from location 13
+05 +3011 ADD input
+06 +2113 STORE sum at location 13
+07 +4000 BRANCH 00, loop back to beginning
+08 +2013 LOAD sum from location 13
+09 +1113 WRITE sum 
+10 +4300 HALT
+11 0     Input variable
+12 -1    Sentinel = -1 variable
+13 0     Sum variable
+
+
 
 b) Use a counter-controlled loop to read seven numbers, some positive and some negative, and
 compute and print their average
@@ -51,6 +77,7 @@ how many numbers should be processed
 #include <stdio.h>
 
 void showMemory(int memArray[]);
+void takeInstructions(int memArray[]);
 
 #define READ 10       // Read a word from the terminal into a specific location in memory
 #define WRITE 11      // Write a word from a specific location in memory to the terminal
@@ -78,20 +105,7 @@ int main(void)
 
     // Prompt user to enter instructions one by one
     printf("Please enter instructions:\n");
-    for (int i = 0; i < MEM_SIZE; i++){
-        int input = 0;
-
-        scanf("%d", &input);
-
-        if (input == -9999){
-            printf("Compiling...\n\n");
-            break;
-        }
-        
-        MEMORY[i] = input;
-
-        instructionCounter++;
-    }
+    takeInstructions(MEMORY);
 
     puts("Final Memory Array: ");
     showMemory(MEMORY);
@@ -109,6 +123,7 @@ int main(void)
         switch(opcode){
             case READ:
                 printf("Please provide an integer > ");
+                fflush(stdout);
 
                 int input = 0;
                 scanf("%d", &input);
@@ -142,7 +157,10 @@ int main(void)
 
                 index++;
                 break;
-            case BRANCHNEG:
+            case BRANCH: // Branch to a specific location in memory
+                index = operand;
+                break;
+            case BRANCHNEG: // Branch to a specific location in memory if the accumulator is negative
                 if (accumulator < 0){
                     index = operand;
                 }
@@ -150,6 +168,14 @@ int main(void)
                     index++;
                 }
 
+                break;
+            case BRANCHZERO: // Branch to a specific location in memory if the accumulator is zero
+                if (accumulator == 0){
+                    index = operand;
+                }
+                else {
+                    index++;
+                }
                 break;
             case HALT:
                 running = 0;
@@ -179,4 +205,20 @@ void showMemory(int memArray[])
     }
 
     printf("]\n");
+}
+
+void takeInstructions(int memArray[])
+{
+    for (int i = 0; i < MEM_SIZE; i++){
+        int input = 0;
+
+        scanf("%d", &input);
+
+        if (input == -99999){
+            printf("Compiling...\n\n");
+            break;
+        }
+        
+        memArray[i] = input;
+    }
 }
