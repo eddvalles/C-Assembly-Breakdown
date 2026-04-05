@@ -1,5 +1,5 @@
 /*
-Special Section: Building Your Own Computer (7.27 through 7.29)
+Special Section: Building Your Own Computer (7.27 and 7.28)
 
 7.27:
 Simpletron contains an "accumulator" - a "special register" in which information is put before the Simpletron
@@ -13,10 +13,7 @@ Simpletron is equipped with a 100-word memory, and these words are referenced by
 Before running an SML program, we must load or place the program into memory. The first instruction (or statement)
 of every SML program is always placed in location 00.
 
-The sign of an SML instruction is always plus.
-The sign of a data word may be either plus or minus.
-
-Each location in the Simpletron's memory may contain either an instruction, a data values used by a program
+Each location in the Simpletron's memory may contain either an instruction, a data value used by a program
 or an unused area of memory.
 
 The first two digits of each SML instruction are the operation code, which specifies the operation to be performed.
@@ -63,21 +60,13 @@ a) Use a sentinel-controlled loop to read positive integers and compute and prin
 11 0     Input variable
 12 -1    Sentinel = -1 variable
 13 0     Sum variable
-
-
-
-b) Use a counter-controlled loop to read seven numbers, some positive and some negative, and
-compute and print their average
-
-c) Read a series of numbers and determine and print the largest number. The first number read indicates
-how many numbers should be processed
-
 */
 
 #include <stdio.h>
 
-void showMemory(int memArray[]);
-void takeInstructions(int memArray[]);
+void load(int memArray[]); // Reads the SML instructions from the user at the keyboard
+void dump(int memArray[], int accumulator, int instructionCounter,
+        int instructionRegister, int operationCode, int operand);
 
 #define READ 10       // Read a word from the terminal into a specific location in memory
 #define WRITE 11      // Write a word from a specific location in memory to the terminal
@@ -98,124 +87,161 @@ int main(void)
 {
     // Define the 100-word memory
     int MEMORY[MEM_SIZE] = {0};
-    int instructionCounter = 0; // Number of instructions that were provided by the user
 
-    puts("Initial Memory Array: ");
-    showMemory(MEMORY);
+    int accumulator = 0;
+    int instructionCounter = 0;  // Location in memory that contains the instruction being performed
+    int instructionRegister = 0; // Next instruction to be performed
+    int operationCode = 0;       // Operation currently being performed
+    int operand = 0;             // Memory location in which the current instruction operates
+
+    puts("*** Welcome to Simpletron! ***");
+    puts("*** Please enter your program one instruction ***");
+    puts("*** (or data word) at a time. I will type the ***");
+    puts("*** location number and a question mark (?).  ***");
+    puts("*** You then type the word for that location. ***");
+    puts("*** Type the sentinel -99999 to stop entering ***");
+    puts("*** your program. ***");
 
     // Prompt user to enter instructions one by one
     printf("Please enter instructions:\n");
-    takeInstructions(MEMORY);
+    load(MEMORY);
 
-    puts("Final Memory Array: ");
-    showMemory(MEMORY);
-
-    int accumulator = 0;
+    dump(MEMORY, accumulator, instructionCounter,
+                instructionRegister, operationCode, operand);
 
     int running = 1;
-    int index = 0;
     while (running){
-        int instruction = MEMORY[index];
 
-        int opcode = instruction / 100;
-        int operand = instruction % 100;
+        instructionRegister = MEMORY[instructionCounter]; 
+        operationCode = instructionRegister / 100; 
+        operand = instructionRegister % 100; 
 
-        switch(opcode){
-            case READ:
+        switch(operationCode){
+            case READ: // Read a word from the terminal into a specific location in memory
                 printf("Please provide an integer > ");
                 fflush(stdout);
 
                 int input = 0;
-                scanf("%d", &input);
+                do {
+                    scanf("%d", &input);
+                    if (input < -9999 || input > 9999){
+                            printf("Please enter a value between -9999 and 9999: ");
+                            fflush(stdout);
+                    }
+                } while (input < -9999 || input > 9999);
 
                 MEMORY[operand] = input;
 
-                index++;
+                instructionCounter++;
                 break;
-            case WRITE:
-                printf("\nValue: %d\n", MEMORY[operand]);
+            case WRITE: // Write a word from a specific location in memory to the terminal
+                printf("\nAnswer: %d\n", MEMORY[operand]);
 
-                index++;
+                instructionCounter++;
                 break;
-            case LOAD:
+            case LOAD: // Load a word from a specific location in memory into the accumulator
                 accumulator = MEMORY[operand];
 
-                index++;
+                instructionCounter++;
                 break;
-            case STORE:
+            case STORE: // Store a word from the accumulator into a specific location in memory
                 MEMORY[operand] = accumulator;
 
-                index++;
+                instructionCounter++;
                 break;
-            case ADD:
+            case ADD: // Add a word from a specific location in memory to the word in the accumulator
                 accumulator += MEMORY[operand];
 
-                index++;
+                instructionCounter++;
                 break;
-            case SUBTRACT:
+            case SUBTRACT: // Sub a word from a specific location in memory from the word in the accumulator
                 accumulator -= MEMORY[operand];
 
-                index++;
+                instructionCounter++;
                 break;
             case BRANCH: // Branch to a specific location in memory
-                index = operand;
+                instructionCounter = operand;
                 break;
             case BRANCHNEG: // Branch to a specific location in memory if the accumulator is negative
                 if (accumulator < 0){
-                    index = operand;
+                    instructionCounter = operand;
                 }
                 else {
-                    index++;
+                    instructionCounter++;
                 }
 
                 break;
             case BRANCHZERO: // Branch to a specific location in memory if the accumulator is zero
                 if (accumulator == 0){
-                    index = operand;
+                    instructionCounter = operand;
                 }
                 else {
-                    index++;
+                    instructionCounter++;
                 }
                 break;
-            case HALT:
+            case HALT: // Halt - i.e., the program has completed its task
+                printf("*** Simpletron execution terminated ***\n");
+
                 running = 0;
                 break;
         }   
     }
 
-
-    printf("Accumulator: %d\n", accumulator);
-    showMemory(MEMORY);
+    dump(MEMORY, accumulator, instructionCounter,
+                instructionRegister, operationCode, operand);
 
     return 0;
 }
 
-void showMemory(int memArray[])
+/**
+ * Displays the contents of memory and all of the registers stored in main's variables
+ */
+void dump(int memArray[], int accumulator, int instructionCounter,
+        int instructionRegister, int operationCode, int operand)
 {
-    printf("[");
+    printf("\nREGISTERS:\n");
+    printf("%-25s%+05d\n", "accumulator",         accumulator);
+    printf("%-25s%02d\n",  "instructionCounter",  instructionCounter);
+    printf("%-25s%+05d\n", "instructionRegister", instructionRegister);
+    printf("%-25s%02d\n",  "operationCode",       operationCode);
+    printf("%-25s%02d\n",  "operand",             operand);
 
-    for (int i = 0; i < MEM_SIZE; i++){
-        if (i == MEM_SIZE - 1){
-            printf("%d", memArray[i]);
-        }
-        else {
-            printf("%d, ", memArray[i]);
-        }
-        
+    printf("\nMEMORY:\n");
+
+    // column headers
+    printf("%4s", "");
+    for (int col = 0; col < 10; col++) {
+        printf("%7d", col);
     }
+    printf("\n");
 
-    printf("]\n");
+    // rows
+    for (int row = 0; row < 10; row++) {
+        printf("%3d", row * 10);  // row label (0, 10, 20, ...)
+        for (int col = 0; col < 10; col++) {
+            printf(" %+05d", memArray[row * 10 + col]);
+        }
+        printf("\n");
+    }
 }
 
-void takeInstructions(int memArray[])
+/**
+ * Reads the SML instructions from the user at the keyboard
+ * Stops when the sentinel value -99999 is entered
+ */
+void load(int memArray[])
 {
     for (int i = 0; i < MEM_SIZE; i++){
         int input = 0;
 
+        printf("%02d ? ", i);
+        fflush(stdout);
+        
         scanf("%d", &input);
 
         if (input == -99999){
-            printf("Compiling...\n\n");
+            printf("*** Program loading completed ***\n");
+            printf("*** Program execution begins ***\n\n");
             break;
         }
         
