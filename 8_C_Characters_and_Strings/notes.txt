@@ -1,0 +1,32 @@
+**** Characters ****
+char color[] = "blue";         // creates a 5-element array containing 'b','l','u','e','\0'.
+    - Automatically determines the size of the array based on the number of initializers
+        (5) in the initializer list
+
+
+const char *colorPtr = "blue"; // creates a pointer variable colorPtr that points to the string "blue" in read-only memory
+
+**** scanf ****
+You should always use a field width when using scanf to read into a char array. A field width of 19 in:
+    scanf("%19s", word);
+ensures that scanf reads a maximum of 19 characters and saves the last character for the string's terminating null character.
+This prevents scanf from writing characters into memory beyond the end of the character array.
+
+**** <stdlib.h> ****
+strtod()                    Converts a sequence of characters representing a floating-point value to double
+strtol()                    Converts a sequence of characters representing an integer to a long int
+
+**** <ctype.h> ****
+Characters are often manipulated as integers, because a character in C is a one-byte integer.
+
+int isdigit(int c);         Returns true if c is a digit and 0 (false) otherwise
+int isalpha(int c);         Returns true if c is a letter and 0 (false) otherwise
+int isalnum(int c);         Returns a true value if c is a digit or a letter and 0 (false) otherwise
+int isxdigit(int c)         Returns a true value if c is a hexadecimal digit character and 0 (false) otherwise
+islower()
+isupper()
+tolower()
+toupper()
+ispunct()
+isprint()
+isgraph()
