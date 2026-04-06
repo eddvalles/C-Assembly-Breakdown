@@ -19,14 +19,34 @@ strtol()                    Converts a sequence of characters representing an in
 **** <ctype.h> ****
 Characters are often manipulated as integers, because a character in C is a one-byte integer.
 
+int isblank(int c);         Returns true if c is a blank character that separates words in a line of text and 0 otherwise
 int isdigit(int c);         Returns true if c is a digit and 0 (false) otherwise
 int isalpha(int c);         Returns true if c is a letter and 0 (false) otherwise
 int isalnum(int c);         Returns a true value if c is a digit or a letter and 0 (false) otherwise
 int isxdigit(int c)         Returns a true value if c is a hexadecimal digit character and 0 (false) otherwise
-islower()
-isupper()
-tolower()
-toupper()
-ispunct()
-isprint()
-isgraph()
+int islower(int c);         Returns a true value if c is a lowercase letter and 0 otherwise
+int isupper(int c);         Returns a true value if c is an uppercase letter and 0 otherwise
+int tolower(int c);         If c is an uppercase letter, tolower returns c as a lowercase letter, unchanged otherwise
+int toupper(int c);         If c is a lowercase letter, toupper returns c as an uppercase letter, unchanged otherwise
+int isspace(int c);         Returns a true value if c is a whitespace character (\n, ' ', \f, \r, \t, \v), 0 (false) otherwise
+int iscntrl(int c);         Returns a true value if c is a control character (\t, \v, \f, \a, \b, \r, \n), 0 (false) otherwise
+int ispunct(int c);         Returns a true value if c is a printing character ($, #, (, ), [, ], {, }, ;, :, %), 0 (false) otherwise
+int isprint(int c);         Returns a true value if c is a printing character including a space, 0 (false) otherwise
+int isgraph(int c);         Returns a true value if c is a printing character other than a space, 0 (false) otherwise
+
+
+**** String Conversion Functions ****
+double strtod(const char *nPtr, char **endPtr);
+    Converts the string nPrt to a double
+
+long strtol(const char *nPtr, char **endPtr, int base);
+    Converts the string nPtr to long
+
+unsigned long strtoul(const char *nPtr, char **endPtr, int base);
+    Converts the string nPtr to unsigned long
+
+
+
+
+
+
