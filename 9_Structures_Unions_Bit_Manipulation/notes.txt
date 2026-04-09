@@ -1,0 +1,20 @@
+Structures:
+    - Collections of related variables under one name
+    - Contain variables of many different data types
+    - Commonly used to define records to be stored in files
+typedefs:
+    - Used to create aliases for previously defined data types
+unions:
+    - similar to structures, but with members that share the same storage space
+bitwise operators:
+    - for manipulating the bits of integral operands
+bit fields:
+    - unsigned int or int members of structures or unions for which you specify the number of bits in
+        which the members are stored, helping you pack information tightly
+enumerations:
+    - sets of integer constants represented by identifiers
+
+
+*** Structures ***
+The only valid operations that may be performed on structures are:
+
