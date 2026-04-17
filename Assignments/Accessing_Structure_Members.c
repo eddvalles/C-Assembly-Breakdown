@@ -62,6 +62,10 @@ int main(void)
     customerRecord.customerNumber = 2456;
     strcpy(customerRecord.personal.phoneNumber, "111-222-333");
     strcpy(customerRecord.personal.address, "555 that St");
+    strcpy(customerRecord.personal.city, "Boston");
+    strcpy(customerRecord.personal.state, "MA");
+    strcpy(customerRecord.personal.zipCode, "11102");
+
 
     puts("a) Member lastName of structure customerRecord:");
     printf("Last Name: %s\n\n", customerRecord.lastName);
@@ -90,7 +94,26 @@ int main(void)
     puts("i) Member address of member personal of structure customerRecord.");
     printf("Address: %s\n\n", customerRecord.personal.address);
 
+    puts("j) Member address of member personal of the structure pointed to by customerPtr.");
+    printf("Address: %s\n\n", customerPtr->personal.address);
+
+    puts("k) Member city of member personal of structure customerRecord.");
+    printf("City: %s\n\n", customerRecord.personal.city);
+
+    puts("l) Member city of member personal of the structure pointed to by customerPtr.");
+    printf("City: %s\n\n", customerPtr->personal.city);
     
+    puts("m) Member state of member personal of structure customerRecord.");
+    printf("State: %s\n\n", customerRecord.personal.state);
+
+    puts("n) Member state of member personal of the structure pointed to by customerPtr.");
+    printf("State: %s\n\n", customerPtr->personal.state);
+
+    puts("o) Member zipCode of member personal of structure customerRecord.");
+    printf("Zip Code: %s\n\n", customerRecord.personal.zipCode);
+
+    puts("p) Member zipCode of member personal of the structure pointed to by customerPtr.");
+    printf("Zip Code: %s\n\n", customerRecord.personal.zipCode);
 
     return 0;
 }
