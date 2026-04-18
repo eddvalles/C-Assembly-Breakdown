@@ -58,7 +58,7 @@ void shuffle(Card * const wDeck)
     for (size_t i = 0; i < CARDS; ++i){
         size_t j = rand() % CARDS;
         Card temp = wDeck[i];
-        wDeck[i] = wdeck[j];
+        wDeck[i] = wDeck[j];
         wDeck[j] = temp;
     }
 }

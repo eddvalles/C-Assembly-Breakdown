@@ -15,6 +15,18 @@ enumerations:
     - sets of integer constants represented by identifiers
 
 
-*** Structures ***
-The only valid operations that may be performed on structures are:
+Bitwise Operators:
+
+&           bitwise AND                 Compares its two operands bit by bit. The bits in the result are
+                                        set to 1 if the corresponding bits in the two operands are both 1.
+|           bitwise inclusive OR        Compares its two operands bit by bit. The bits in the result are
+                                        set to 1 if at least one of the corresponding bits in the operands
+                                        is 1.
+^           bitwise exclusive OR        Compares its two operands bit by bit. The bits in the result are
+                                        set to 1 if the corresponding bits in the two operands are different.
+<<          left shift                  Shifts the bits of the first operand right by the number of bits
+                                        specified by the second operand; the method of filling from the left
+                                        is machine dependent when the left operand is negative.
+~           complement                  All 0 bits are set to 1 and all 1bits are set to 0.
+
 
